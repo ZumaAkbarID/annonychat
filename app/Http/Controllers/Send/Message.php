@@ -28,6 +28,13 @@ class Message extends Controller
             ]
         );
 
+        $checkIP = MessageHistory::where('ip_address', $request->getClientIp())
+            ->whereBetween('created_at', [date('Y-m-d H:i:s', strtotime('-30 minutes', Carbon::now()->timestamp)), date('Y-m-d H:i:s', Carbon::now()->timestamp)])->get();
+
+        if ($checkIP->count() > 0) {
+            return redirect()->back()->with('error', 'Kamu hanya bisa mengirim pesan 30 menit sekali kak :)');
+        }
+
         $url = 'https://fastwa.io/api/whatsapp/message/send/' . env('FASTWA_API');
 
         $text = "========================================\nKamu dapat chat dari IP : " . $request->getClientIp() . "\nPada : " . date('D d-M-Y H:i:s', Carbon::now()->timestamp) . "\n========================================\nPesan : " . $request->message . "\n========================================\nUser Agent : " . $request->userAgent();

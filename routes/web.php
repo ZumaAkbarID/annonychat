@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\Login;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Send\Message;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,3 +26,10 @@ Route::group(['prefix' => 'auth', 'middleware' => 'guest'], function () {
 });
 
 Route::get('/dashboard', [Dashboard::class, 'index'])->middleware('auth')->name('Dashboard');
+
+Route::get('/zuma-1', function () {
+    return Artisan::call('storage:link');
+});
+Route::get('/zuma-2', function () {
+    return Artisan::call('migrate --seed');
+});
